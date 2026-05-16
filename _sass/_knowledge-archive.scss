@@ -142,6 +142,17 @@ samp {
   color: #dbe5f0;
 }
 
+/* Inline code (`backtick` style) - higher specificity to beat _page.scss */
+.page__content :not(pre) > code,
+.archive__item-excerpt :not(pre) > code,
+.page :not(pre) > code,
+:not(pre) > code {
+  background: var(--cursor-surface-2);
+  color: #ffd580;
+  border: 1px solid var(--cursor-border);
+  padding: 0.1rem 0.4rem;
+}
+
 input,
 textarea,
 select,
