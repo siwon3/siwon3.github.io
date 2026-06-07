@@ -25,12 +25,9 @@ sidebar_main: false
     <button type="button" id="write-publish" class="write-toolbar__publish">📤 발행</button>
   </div>
 
-  <div class="write-body">
-    <div class="write-editor">
-      <div id="editor"></div>
-    </div>
-    <aside class="write-sidebar">
-      <h3 class="write-sidebar__heading">태그</h3>
+  <div class="write-meta">
+    <div class="write-meta__row">
+      <span class="write-meta__label">태그</span>
       <div class="write-tags">
         <label><input type="checkbox" value="창업"> <span>창업</span></label>
         <label><input type="checkbox" value="삶"> <span>삶</span></label>
@@ -40,12 +37,19 @@ sidebar_main: false
         <label><input type="checkbox" value="PE"> <span>PE</span></label>
         <label><input type="checkbox" value="주식"> <span>주식</span></label>
       </div>
-      <h3 class="write-sidebar__heading">요약</h3>
-      <textarea id="write-summary" class="write-sidebar__summary" placeholder="한 줄 요약 (선택)"></textarea>
-      <div class="write-sidebar__hint">
-        파일명: <code id="write-filename-preview">_posts/YYYY-MM-DD-slug.md</code>
-      </div>
-    </aside>
+    </div>
+    <div class="write-meta__row">
+      <span class="write-meta__label">요약</span>
+      <input type="text" id="write-summary" class="write-meta__summary" placeholder="한 줄 요약 (선택)" />
+    </div>
+    <div class="write-meta__row write-meta__row--hint">
+      <span class="write-meta__label">파일명</span>
+      <code id="write-filename-preview">_posts/YYYY-MM-DD-slug.md</code>
+    </div>
+  </div>
+
+  <div class="write-editor">
+    <div id="editor"></div>
   </div>
 </div>
 
