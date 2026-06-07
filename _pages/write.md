@@ -60,7 +60,7 @@ sidebar_main: false
       발행은 GitHub API로 직접 커밋합니다. <strong>Fine-grained PAT</strong>가 필요해요.<br>
       <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub에서 PAT 생성하기 →</a><br>
       <small>
-        Repository access: <code>siwon3/siwonsong.github.io</code>만 선택 ·
+        Repository access: <code>siwon3/siwon3.github.io</code>만 선택 ·
         Repository permissions → Contents: <code>Read and write</code>
       </small>
     </p>

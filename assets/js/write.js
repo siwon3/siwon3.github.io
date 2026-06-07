@@ -3,7 +3,7 @@
 
   const PASSWORD_HASH =
     "d99210b7366f189081f197ec3a2fa60b11eb29f72087dc9a856228a02d3630c5";
-  const REPO = "siwon3/siwonsong.github.io";
+  const REPO = "siwon3/siwon3.github.io";
   const BRANCH = "main";
   const PAT_KEY = "siwonsong-gh-pat";
   const DRAFT_KEY = "siwonsong-write-draft";
