@@ -134,14 +134,14 @@
         d3
           .forceLink(data.links)
           .id((d) => d.id)
-          .distance(isMini ? 42 : 62)
+          .distance(isMini ? 60 : 110)
       )
       .force(
         "charge",
         d3.forceManyBody().strength((d) => {
-          if (d.type === "post") return isMini ? -20 : -38;
-          if (d.type === "tag") return isMini ? -8 : -14;
-          return isMini ? -18 : -34;
+          if (d.type === "post") return isMini ? -60 : -180;
+          if (d.type === "tag") return isMini ? -120 : -360;
+          return isMini ? -50 : -150;
         })
       )
       .force("center", d3.forceCenter(width / 2, height / 2))
@@ -152,7 +152,7 @@
         d3
           .forceCollide()
           .radius((d) =>
-            getNodeRadius(d, postLengthStats) + (d.type === "post" ? 4.5 : 2.5)
+            getNodeRadius(d, postLengthStats) + (d.type === "post" ? (isMini ? 8 : 22) : (isMini ? 4 : 8))
           )
       );
 
@@ -207,12 +207,17 @@
       node
         .append("text")
         .attr("class", "graph-label")
-        .text((d) => truncateLabel(d.label, 16))
+        .text((d) => truncateLabel(d.label, d.type === "tag" ? 16 : 10))
         .attr("text-anchor", "middle")
         .attr("dy", (d) => getNodeRadius(d, postLengthStats) + 12)
-        .attr("font-size", (d) => (d.type === "tag" ? "11px" : "10px"))
+        .attr("font-size", (d) => (d.type === "tag" ? "12px" : "10px"))
+        .attr("font-weight", (d) => (d.type === "tag" ? 600 : 400))
         .attr("fill", theme.text)
-        .style("opacity", (d) => (d.type === "tag" ? 1 : 0))
+        .style("opacity", 1)
+        .attr("paint-order", "stroke")
+        .attr("stroke", "rgba(13, 17, 23, 0.85)")
+        .attr("stroke-width", 3)
+        .attr("stroke-linejoin", "round")
         .attr("pointer-events", "none");
     }
 
@@ -601,11 +606,6 @@
     });
 
     node.style("opacity", (n) => (connectedIds.has(n.id) ? 1 : 0.15));
-    node
-      .selectAll("text.graph-label")
-      .style("opacity", (n) =>
-        n.type === "tag" ? 1 : connectedIds.has(n.id) ? 1 : 0
-      );
 
     link
       .attr("stroke", (l) => {
@@ -627,9 +627,6 @@
 
   function resetHighlight(node, link, theme) {
     node.style("opacity", 1);
-    node
-      .selectAll("text.graph-label")
-      .style("opacity", (d) => (d.type === "tag" ? 1 : 0));
     link
       .attr("stroke", theme.link)
       .attr("stroke-opacity", 0.6)
