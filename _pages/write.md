@@ -11,13 +11,7 @@ sidebar_main: false
 
 <div class="write-page">
 
-<div class="write-auth" id="write-auth">
-  <h2 class="write-auth__title">🔒 비밀번호</h2>
-  <input type="password" id="write-auth-input" class="write-auth__input" placeholder="비밀번호" autocomplete="off" />
-  <button type="button" id="write-auth-submit" class="write-auth__submit">잠금 해제</button>
-</div>
-
-<div class="write-main" id="write-main" hidden>
+<div class="write-main" id="write-main">
   <div class="write-toolbar">
     <input type="text" id="write-title" class="write-toolbar__title" placeholder="제목을 입력하세요" />
     <span class="write-toolbar__status" id="write-draft-status">자동 저장 대기</span>

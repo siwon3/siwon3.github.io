@@ -1,24 +1,13 @@
 (function () {
   "use strict";
 
-  const PASSWORD_HASH =
-    "d99210b7366f189081f197ec3a2fa60b11eb29f72087dc9a856228a02d3630c5";
   const REPO = "siwon3/siwon3.github.io";
   const BRANCH = "main";
   const PAT_KEY = "siwonsong-gh-pat";
   const DRAFT_KEY = "siwonsong-write-draft";
-  const AUTH_KEY = "siwonsong-write-auth";
 
   let editor;
   let saveTimer;
-
-  async function sha256Hex(text) {
-    const buffer = new TextEncoder().encode(text);
-    const digest = await crypto.subtle.digest("SHA-256", buffer);
-    return Array.from(new Uint8Array(digest))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-  }
 
   function slugify(text) {
     return (text || "")
@@ -295,38 +284,11 @@ categories: Tech
       });
   }
 
-  function initAuth() {
-    const gate = document.getElementById("write-auth");
-    const main = document.getElementById("write-main");
-    const input = document.getElementById("write-auth-input");
-    const btn = document.getElementById("write-auth-submit");
-
-    const enter = () => {
-      gate.hidden = true;
-      main.hidden = false;
-      sessionStorage.setItem(AUTH_KEY, "1");
-      initEditor();
-      initButtons();
-      updateFilenamePreview();
-    };
-
-    const tryUnlock = async () => {
-      const ok = (await sha256Hex(input.value)) === PASSWORD_HASH;
-      if (ok) enter();
-      else alert("비밀번호가 일치하지 않습니다.");
-    };
-
-    btn.addEventListener("click", tryUnlock);
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") tryUnlock();
-    });
-
-    if (sessionStorage.getItem(AUTH_KEY) === "1") {
-      enter();
-    } else {
-      setTimeout(() => input.focus(), 50);
-    }
+  function init() {
+    initEditor();
+    initButtons();
+    updateFilenamePreview();
   }
 
-  document.addEventListener("DOMContentLoaded", initAuth);
+  document.addEventListener("DOMContentLoaded", init);
 })();
