@@ -21,6 +21,32 @@
     tag: "#ffe8a3",
   };
 
+  const TAG_COLORS = {
+    "창업": "#f5b14c",
+    "삶": "#5eead4",
+    "인간관계": "#f472b6",
+    "사랑": "#fb7185",
+    "일": "#60a5fa",
+    "PE": "#a78bfa",
+    "주식": "#4ade80",
+  };
+  const DEFAULT_TAG_COLOR = "#94a3b8";
+
+  function getNodeColor(node) {
+    if (node.type === "tag") {
+      return TAG_COLORS[node.label] || DEFAULT_TAG_COLOR;
+    }
+    if (node.type === "post") {
+      const firstTag = (node.tags || [])[0];
+      return TAG_COLORS[firstTag] || DEFAULT_TAG_COLOR;
+    }
+    return DEFAULT_TAG_COLOR;
+  }
+
+  function colorKey(color) {
+    return color.replace("#", "").toLowerCase();
+  }
+
   const BASE_SIZES = {
     post: 5,
     tag: 8,
@@ -125,7 +151,7 @@
 
   function renderGraph(g, data, width, height, isMini, svg, zoom, theme) {
     const postLengthStats = buildPostLengthStats(data);
-    const glowAssets = ensureGlowAssets(svg, isMini);
+    const glowAssets = ensureGlowAssets(svg, isMini, data);
 
     const simulation = d3
       .forceSimulation(data.nodes)
@@ -190,7 +216,8 @@
         "fill",
         (d) =>
           `url(#${
-            glowAssets.gradientIds[d.type] || glowAssets.gradientIds.post
+            glowAssets.gradientIds[colorKey(getNodeColor(d))] ||
+            glowAssets.fallbackGradientId
           })`
       )
       .attr("filter", `url(#${glowAssets.filterId})`)
@@ -199,7 +226,7 @@
     node
       .append("circle")
       .attr("r", (d) => getNodeRadius(d, postLengthStats))
-      .attr("fill", (d) => COLORS[d.type] || COLORS.post)
+      .attr("fill", (d) => getNodeColor(d))
       .attr("stroke", theme.nodeStroke)
       .attr("stroke-width", 1.5);
 
@@ -259,7 +286,7 @@
     svg.node().__theme = theme;
   }
 
-  function ensureGlowAssets(svg, isMini) {
+  function ensureGlowAssets(svg, isMini, data) {
     const suffix = isMini ? "mini" : "main";
     const glowFilterId = `graph-node-glow-${suffix}`;
     let defs = svg.select("defs");
@@ -289,10 +316,17 @@
         .attr("in", (d) => d);
     }
 
+    const colorSet = new Set();
+    (data && data.nodes ? data.nodes : []).forEach((n) => {
+      colorSet.add(getNodeColor(n));
+    });
+    colorSet.add(DEFAULT_TAG_COLOR);
+
     const gradientIds = {};
-    Object.entries(COLORS).forEach(([type, color]) => {
-      const gradientId = `graph-node-glow-grad-${type}-${suffix}`;
-      gradientIds[type] = gradientId;
+    colorSet.forEach((color) => {
+      const key = colorKey(color);
+      const gradientId = `graph-node-glow-grad-${key}-${suffix}`;
+      gradientIds[key] = gradientId;
 
       if (!defs.select(`#${gradientId}`).empty()) return;
 
@@ -325,6 +359,7 @@
     return {
       filterId: glowFilterId,
       gradientIds,
+      fallbackGradientId: gradientIds[colorKey(DEFAULT_TAG_COLOR)],
     };
   }
 
